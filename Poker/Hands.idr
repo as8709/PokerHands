@@ -280,8 +280,7 @@ evalRestHand hand sort_prf contra_4 contra_sf = case isFlush hand of
                                                                                                                                            (Yes prf) => PairHand prf
                                                                                                                                            (No contra) => HighCardHand hand))))
 
---SlideWise2 hand PairH -> Void
---FullHouse hand pair_prf -> Void
+
 export evalHand: (hand: Vect HAND_SIZE Card) -> Sorted hand -> Hand hand
 evalHand hand sort_prf = case isStraightFlush hand of
                               (Yes prf) => StraightFlushHand prf
@@ -415,13 +414,42 @@ showPair :{h: Vect HAND_SIZE Card} -> (x : SlideWise2 h PairH) -> String
 showPair {h} x = let (m::ms, r::rs) = getMatchAndRest2 h x in
                 "Pair: " ++ (show (cardValue m)) ++ "s with a " ++ (show (cardValue r)) ++ " kicker"
 
+showTwoPair : (x : TwoPair h)-> String
+showTwoPair {h} (MkTwoPair x firstPair secondPair) = let (m1::ms1) = getMatch2 h firstPair
+                                                         (m2::ms2, [kicker]) = getMatchAndRest2 (getRest2 h firstPair) secondPair in
+                                                         "Two Pair: " ++ (show (cardValue m1)) ++ "s and " ++ (show (cardValue m2)) ++ "s with a " ++ (show (cardValue kicker)) ++ " kicker"
+
+showThreeOfAKind : (x : SlideWise3 h ThreeOfAKind) -> String
+showThreeOfAKind {h} x = let (m::ms, r::rs) = getMatchAndRest3 h x in
+                "Three of a kind: " ++ (show (cardValue m)) ++ "s with a " ++ (show (cardValue r)) ++ " kicker"
+
+showStraight : (x : Straight h) -> String
+showStraight {h = (z :: xs)} (MkStraight x y) = "Straight: " ++ (show (cardValue z)) ++ " high"
+
+showFlush : (x : Flush h) -> String
+showFlush {h = (y :: xs)} x = "Flush: " ++ (show (cardValue y)) ++ " high"
+
+
+
+showFullHouse : (x : FullHouse h) -> String
+showFullHouse {h} (MkFullHouse x three pair) = let (m1::m1s) = getMatch3 h three
+                                                   (m2::m2s) = (getRest3 h three) in
+                                                   "Full house: " ++ (show (cardValue m1)) ++ "s over " ++ (show (cardValue m2)) ++ "s"
+
+showFourOfAKind : (x : SlideWise4 h FourOfAKind) -> String
+showFourOfAKind {h} x = let (m::ms, [kicker]) = getMatchAndRest4 h x in
+                "Four of a kind: " ++ (show (cardValue m)) ++ "s with a " ++ (show (cardValue kicker)) ++ " kicker"
+
+showStraightFlush : (x : StraightFlush h) -> String
+showStraightFlush {h = (y :: xs)} x = "Straight flush: " ++ (show (cardValue y)) ++ " high"
+
 export Show (Hand h) where
-  show (StraightFlushHand x) = "Straight Flush"
-  show (FourOfAKindHand x) = "Four of a kind"
-  show (FullHouseHand x) = "Full house"
-  show (FlushHand x) = "Flush"
-  show (StraightHand x) = "Straight"
-  show (ThreeOfAKindHand x) = "Three of a kind"
-  show (TwoPairHand x) = "Two Pair"
+  show (StraightFlushHand x) = showStraightFlush x
+  show (FourOfAKindHand x) = showFourOfAKind x
+  show (FullHouseHand x) = showFullHouse x
+  show (FlushHand x) = showFlush x
+  show (StraightHand x) = showStraight x
+  show (ThreeOfAKindHand x) = showThreeOfAKind x
+  show (TwoPairHand x) = showTwoPair x
   show (PairHand x) = showPair x
   show (HighCardHand h) = showHighCard h
