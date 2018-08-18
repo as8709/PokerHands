@@ -1,0 +1,4 @@
+package poker
+
+modules = Card, InsertionSort, Sorted, ElemsAreSame, Hands
+sourcedir = Poker
