@@ -1,4 +1,4 @@
 package poker
 
-modules = Card, InsertionSort, Sorted, ElemsAreSame, Hands
+modules = Card, InsertionSort, Sorted, ElemsAreSame, Hands, SlideWise
 sourcedir = Poker

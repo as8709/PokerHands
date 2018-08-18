@@ -1,11 +1,11 @@
 module Main
 import Data.Vect
 
-import Hands
-import Card
-import InsertionSort
-import Sorted
-import ElemsAreSame
+import Poker.Hands
+import Poker.Card
+import Poker.InsertionSort
+import Poker.Sorted
+import Poker.ElemsAreSame
 
 
 
